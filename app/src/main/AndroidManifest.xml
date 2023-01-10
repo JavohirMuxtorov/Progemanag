@@ -11,13 +11,20 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/download"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/download"
         android:supportsRtl="true"
         android:theme="@style/Theme.TrelloClone"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.MembersActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activity.TaskListActivity"
             android:exported="false"
@@ -32,7 +39,7 @@
             android:name=".activity.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.TrelloClone.NoActionBar"  />
+            android:theme="@style/Theme.TrelloClone.NoActionBar" />
         <activity
             android:name=".activity.MyProfileActivity"
             android:exported="false"
@@ -62,7 +69,8 @@
             android:name=".activity.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.TrelloClone.NoActionBar" />
+            android:theme="@style/Theme.TrelloClone.NoActionBar"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".activity.SplashActivity"
             android:exported="true"
