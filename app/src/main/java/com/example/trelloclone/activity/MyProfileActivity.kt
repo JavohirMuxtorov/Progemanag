@@ -6,20 +6,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.trelloclone.R
+import com.example.trelloclone.databinding.ActivityMyProfileBinding
 import com.example.trelloclone.firebase.FirestoreClass
 import com.example.trelloclone.models.User
 import com.example.trelloclone.utils.Constants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.activity_my_profile.*
 import java.io.IOException
 
 class MyProfileActivity : BaseActivity() {
@@ -27,12 +25,14 @@ class MyProfileActivity : BaseActivity() {
     private var mSelectedImageFileUri: Uri? = null
     private lateinit var mUserDetails: User
     private var mProfileImageURL: String = ""
+    private lateinit var binding: ActivityMyProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_profile)
+        binding = ActivityMyProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupActionBar()
         FirestoreClass().loadUserDate(this)
-        iv_profile_user_image.setOnClickListener {
+        binding.ivProfileUserImage.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -47,11 +47,11 @@ class MyProfileActivity : BaseActivity() {
                 )
             }
         }
-        btn_update.setOnClickListener {
+        binding.btnUpdate.setOnClickListener {
             if (mSelectedImageFileUri != null) {
                 uploadUserImage()
             } else {
-                showProgressDialog(resources.getString(R.string.please_wait))
+                showProgressDialog()
                 updateUserProfileData()
             }
         }
@@ -77,7 +77,6 @@ class MyProfileActivity : BaseActivity() {
     }
 
 
-    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == Constants.PICK_IMAGE_REQUEST_CODE && data!!.data != null) {
@@ -88,7 +87,7 @@ class MyProfileActivity : BaseActivity() {
                     .load(mSelectedImageFileUri)
                     .centerCrop()
                     .placeholder(R.drawable.ic_user_place_holder)
-                    .into(iv_profile_user_image)
+                    .into(binding.ivProfileUserImage)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -96,7 +95,7 @@ class MyProfileActivity : BaseActivity() {
     }
 
     private fun setupActionBar() {
-        setSupportActionBar(toolbar_my_profile_activity)
+        setSupportActionBar(binding.toolbarMyProfileActivity)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
@@ -104,7 +103,7 @@ class MyProfileActivity : BaseActivity() {
             actionBar.title = resources.getString(R.string.my_profile)
 
         }
-        toolbar_my_profile_activity.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarMyProfileActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
     fun setUserDataInUi(user: User) {
@@ -114,12 +113,12 @@ class MyProfileActivity : BaseActivity() {
             .load(user.image)
             .centerCrop()
             .placeholder(R.drawable.ic_user_place_holder)
-            .into(iv_profile_user_image)
+            .into(binding.ivProfileUserImage)
 
-        et_name_myProfile.setText(user.name)
-        et_email_myProfile.setText(user.email)
+        binding.etNameMyProfile.setText(user.name)
+        binding.etEmailMyProfile.setText(user.email)
         if (user.mobile != 0L) {
-            et_mobile_myProfile.setText(user.mobile.toString())
+            binding.etMobileMyProfile.setText(user.mobile.toString())
         }
     }
 
@@ -130,12 +129,12 @@ class MyProfileActivity : BaseActivity() {
             userHashMap[Constants.IMAGE] = mProfileImageURL
             anyChangesMode = true
         }
-        if (et_name_myProfile.text.toString() != mUserDetails.name) {
-            userHashMap[Constants.NAME] = et_name_myProfile.text.toString()
+        if (binding.etNameMyProfile.text.toString() != mUserDetails.name) {
+            userHashMap[Constants.NAME] = binding.etNameMyProfile.text.toString()
             anyChangesMode = true
         }
-        if (et_mobile_myProfile.text.toString() != mUserDetails.mobile.toString()) {
-            userHashMap[Constants.MOBILE] = et_mobile_myProfile.text.toString().toLong()
+        if (binding.etMobileMyProfile.text.toString() != mUserDetails.mobile.toString()) {
+            userHashMap[Constants.MOBILE] = binding.etMobileMyProfile.text.toString().toLong()
             anyChangesMode = true
         }
         if (anyChangesMode)
@@ -145,7 +144,7 @@ class MyProfileActivity : BaseActivity() {
 
     private fun uploadUserImage() {
 
-        showProgressDialog(resources.getString(R.string.please_wait))
+        showProgressDialog()
 
         if (mSelectedImageFileUri != null) {
 

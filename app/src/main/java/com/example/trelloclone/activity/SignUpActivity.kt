@@ -6,18 +6,21 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.trelloclone.R
+import com.example.trelloclone.databinding.ActivitySignInBinding
+import com.example.trelloclone.databinding.ActivitySignUpBinding
 import com.example.trelloclone.firebase.FirestoreClass
 import com.example.trelloclone.models.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : BaseActivity() {
+    private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -26,7 +29,7 @@ class SignUpActivity : BaseActivity() {
 
         setupActionBar()
 
-        btn_sign_up.setOnClickListener {
+        binding.btnSignUp.setOnClickListener {
             registerUser()
         }
     }
@@ -44,7 +47,7 @@ class SignUpActivity : BaseActivity() {
 
     private fun setupActionBar() {
 
-        setSupportActionBar(toolbar_sign_up_activity)
+        setSupportActionBar(binding.toolbarSignUpActivity)
 
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -52,16 +55,16 @@ class SignUpActivity : BaseActivity() {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
         }
 
-        toolbar_sign_up_activity.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarSignUpActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun registerUser() {
-        val name: String = et_name.text.toString().trim { it <= ' ' }
-        val email: String = et_email.text.toString().trim { it <= ' ' }
-        val password: String = et_password.text.toString().trim { it <= ' ' }
+        val name: String = binding.etName.text.toString().trim { it <= ' ' }
+        val email: String = binding.etEmail.text.toString().trim { it <= ' ' }
+        val password: String = binding.etPassword.text.toString().trim { it <= ' ' }
 
         if (validateForm(name, email, password)) {
-            showProgressDialog(resources.getString(R.string.please_wait))
+            showProgressDialog()
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(OnCompleteListener<AuthResult> { task ->
 

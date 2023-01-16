@@ -7,18 +7,20 @@ import android.text.TextUtils
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.trelloclone.R
+import com.example.trelloclone.databinding.ActivitySignInBinding
 import com.example.trelloclone.firebase.FirestoreClass
 import com.example.trelloclone.models.User
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignInActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     @SuppressLint("SuspiciousIndentation")
+    private lateinit var binding: ActivitySignInBinding
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        binding = ActivitySignInBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_sign_in)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     auth = FirebaseAuth.getInstance()
         window.setFlags(
@@ -26,7 +28,7 @@ class SignInActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         setInActionBar()
-    btn_sign_in.setOnClickListener {
+    binding.btnSignIn.setOnClickListener {
         signInRegisteredUser()
     }
     }
@@ -36,24 +38,24 @@ fun signInSuccess(user: User){
     finish()
 }
     private fun setInActionBar(){
-        setSupportActionBar(toolbar_sign_in_activity)
+        setSupportActionBar(binding.toolbarSignInActivity)
         val actionBar = supportActionBar
         if (actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
         }
-        toolbar_sign_in_activity.setNavigationOnClickListener {
+        binding.toolbarSignInActivity.setNavigationOnClickListener {
             onBackPressed()
         }
     }
     private fun signInRegisteredUser() {
         // Here we get the text from editText and trim the space
-        val email: String = et_email_signIn.text.toString().trim { it <= ' ' }
-        val password: String = et_password_signIn.text.toString().trim { it <= ' ' }
+        val email: String = binding.etEmailSignIn.text.toString().trim { it <= ' ' }
+        val password: String = binding.etPasswordSignIn.text.toString().trim { it <= ' ' }
 
         if (validateForm(email, password)) {
             // Show the progress dialog.
-            showProgressDialog(resources.getString(R.string.please_wait))
+            showProgressDialog()
 
             // Sign-In using FirebaseAuth
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)

@@ -4,16 +4,16 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.trelloclone.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import kotlinx.android.synthetic.main.dialog_progress.*
 
 open class BaseActivity : AppCompatActivity() {
 //    lateinit var binding: ActivityBaseBinding
+
 
     private var doubleBackToExitPressedOnce = false
     private lateinit var mProgressDialog: Dialog
@@ -22,10 +22,10 @@ open class BaseActivity : AppCompatActivity() {
 //        binding = ActivityBaseBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_base)
     }
-    fun showProgressDialog(text: String){
+    fun showProgressDialog() {
         mProgressDialog = Dialog(this)
         mProgressDialog.setContentView(R.layout.dialog_progress)
-        mProgressDialog.tv_progress_text.text = text
+        mProgressDialog.setCancelable(false)
         mProgressDialog.show()
      }
     fun hideProgressDialog(){

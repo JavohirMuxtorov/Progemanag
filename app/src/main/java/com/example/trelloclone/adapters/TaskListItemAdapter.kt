@@ -1,5 +1,6 @@
 package com.example.trelloclone.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -13,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trelloclone.R
 import com.example.trelloclone.activity.TaskListActivity
+import com.example.trelloclone.databinding.ItemBoardBinding
+import com.example.trelloclone.databinding.ItemCardBinding
+import com.example.trelloclone.databinding.ItemTaskBinding
 import com.example.trelloclone.models.Task
-import kotlinx.android.synthetic.main.item_task.view.*
 
 open class TaskListItemAdapter(private val context: Context, private var list: ArrayList<Task>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -24,30 +27,39 @@ open class TaskListItemAdapter(private val context: Context, private var list: A
         )
         layoutParams.setMargins((15.toDp().toPx()),0,(40.toDp().toPx()),0)
         view.layoutParams = layoutParams
-        return MyViewHolder(view)
+        return MyViewHolder(
+            view,
+            ItemTaskBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+
+                false
+            )
+
+        )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val model = list[position]
         if (holder is MyViewHolder){
             if (position == list.size - 1){
-                holder.itemView.tv_add_task_list.visibility = View.VISIBLE
-                holder.itemView.ll_task_item.visibility = View.GONE
+                holder.binding.tvAddTaskList.visibility = View.VISIBLE
+                holder.binding.llTaskItem.visibility = View.GONE
             }else{
-                holder.itemView.tv_add_task_list.visibility = View.GONE
-                holder.itemView.ll_task_item.visibility = View.VISIBLE
+                holder.binding.tvAddTaskList.visibility = View.GONE
+                holder.binding.llTaskItem.visibility = View.VISIBLE
             }
-            holder.itemView.tv_task_list_title.text = model.title
-            holder.itemView.tv_add_task_list.setOnClickListener {
-                holder.itemView.tv_add_task_list.visibility = View.GONE
-                holder.itemView.cv_add_task_list_name.visibility = View.VISIBLE
+            holder.binding.tvTaskListTitle.text = model.title
+            holder.binding.tvAddTaskList.setOnClickListener {
+                holder.binding.tvAddTaskList.visibility = View.GONE
+                holder.binding.cvAddTaskListName.visibility = View.VISIBLE
             }
-            holder.itemView.ib_close_list_name.setOnClickListener {
-                holder.itemView.tv_add_task_list.visibility = View.VISIBLE
-                holder.itemView.cv_add_task_list_name.visibility = View.GONE
+            holder.binding.ibCloseListName.setOnClickListener {
+                holder.binding.tvAddTaskList.visibility = View.VISIBLE
+                holder.binding.cvAddTaskListName.visibility = View.GONE
             }
-            holder.itemView.ib_done_list_name.setOnClickListener {
-                val listName = holder.itemView.et_task_list_name.text.toString()
+            holder.binding.ibDoneListName.setOnClickListener {
+                val listName = holder.binding.etTaskListName.text.toString()
                 if (listName.isNotEmpty()){
                     if (context is TaskListActivity){
                         context.createTaskList(listName)
@@ -56,18 +68,18 @@ open class TaskListItemAdapter(private val context: Context, private var list: A
                     Toast.makeText(context, "Please enter List Name", Toast.LENGTH_SHORT).show()
                 }
             }
-            holder.itemView.ib_edit_list_name.setOnClickListener {
-                holder.itemView.et_edit_task_list_name.setText(model.title)
-                holder.itemView.ll_title_view.visibility = View.GONE
-                holder.itemView.cv_edit_task_list_name.visibility = View.VISIBLE
+            holder.binding.ibEditListName.setOnClickListener {
+                holder.binding.etEditTaskListName.setText(model.title)
+                holder.binding.llTitleView.visibility = View.GONE
+                holder.binding.cvEditTaskListName.visibility = View.VISIBLE
             }
 
-            holder.itemView.ib_close_editable_view.setOnClickListener {
-                holder.itemView.ll_title_view.visibility = View.VISIBLE
-                holder.itemView.cv_edit_task_list_name.visibility = View.GONE
+            holder.binding.ibCloseEditableView.setOnClickListener {
+                holder.binding.llTitleView.visibility = View.VISIBLE
+                holder.binding.cvEditTaskListName.visibility = View.GONE
             }
-            holder.itemView.ib_done_edit_list_name.setOnClickListener {
-                val listName = holder.itemView.et_edit_task_list_name.text.toString()
+            holder.binding.ibDoneEditListName.setOnClickListener {
+                val listName = holder.binding.etEditTaskListName.text.toString()
                 if (listName.isNotEmpty()){
                     if (context is TaskListActivity){
                         context.updateTaskList(position,listName, model)
@@ -76,19 +88,19 @@ open class TaskListItemAdapter(private val context: Context, private var list: A
                     Toast.makeText(context, "Please enter List Name", Toast.LENGTH_SHORT).show()
                 }
             }
-            holder.itemView.ib_delete_list.setOnClickListener {
+            holder.binding.ibDeleteList.setOnClickListener {
                 alertDialogFordetails(position, model.title)
             }
-            holder.itemView.tv_add_card.setOnClickListener {
-                holder.itemView.tv_add_card.visibility = View.GONE
-                holder.itemView.cv_add_card.visibility = View.VISIBLE
+            holder.binding.tvAddCard.setOnClickListener {
+                holder.binding.tvAddCard.visibility = View.GONE
+                holder.binding.cvAddCard.visibility = View.VISIBLE
             }
-            holder.itemView.ib_close_card_name.setOnClickListener {
-                holder.itemView.tv_add_card.visibility = View.VISIBLE
-                holder.itemView.cv_add_card.visibility = View.GONE
+            holder.binding.ibCloseCardName.setOnClickListener {
+                holder.binding.tvAddCard.visibility = View.VISIBLE
+                holder.binding.cvAddCard.visibility = View.GONE
             }
-            holder.itemView.ib_done_card_name.setOnClickListener {
-                val cardName = holder.itemView.et_card_name.text.toString()
+            holder.binding.ibDoneCardName.setOnClickListener {
+                val cardName = holder.binding.etCardName.text.toString()
                 if (cardName.isNotEmpty()){
                     if (context is TaskListActivity){
                         context.addCardToTaskList(position,cardName)
@@ -98,10 +110,20 @@ open class TaskListItemAdapter(private val context: Context, private var list: A
                 }
             }
 
-            holder.itemView.rv_card_list.layoutManager = LinearLayoutManager(context)
-            holder.itemView.rv_card_list.setHasFixedSize(true)
+            holder.binding.rvCardList.layoutManager = LinearLayoutManager(context)
+            holder.binding.rvCardList.setHasFixedSize(true)
             val adapter = CardListItemsAdapter(context, model.cards)
-            holder.itemView.rv_card_list.adapter = adapter
+            holder.binding.rvCardList.adapter = adapter
+
+            adapter.setOnClickListener(
+                object : CardListItemsAdapter.OnClickListener{
+                    override fun onClick(cardPosition: Int) {
+                        if (context is TaskListActivity){
+                            context.cardDetails(position, cardPosition)
+                        }
+                    }
+                }
+            )
         }
     }
 
@@ -110,7 +132,7 @@ open class TaskListItemAdapter(private val context: Context, private var list: A
     }
     private fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
     private fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
-    private class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
+    private class MyViewHolder(view: View,val binding: ItemTaskBinding): RecyclerView.ViewHolder(binding.root)
 private fun alertDialogFordetails(position: Int,title: String){
     val builder = AlertDialog.Builder(context)
     builder.setTitle("Alert")

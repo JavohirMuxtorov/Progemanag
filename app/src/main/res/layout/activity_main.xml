@@ -10,6 +10,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
     <include
+        android:id="@+id/iAppBarMain"
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
